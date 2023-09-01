@@ -47,5 +47,24 @@ public class TaskTriggerTestClass {
         
     }
     
+    // Method To test task is created with the correct details and from Standard User
+    @isTest
+    static void testTaskCompletionFromStandardUser() {
+        Account acc = new Account(Name = 'Test Account',AccountNumber = '003', Active__c = false);
+        insert acc;        
+        User user = [SELECT Id FROM User WHERE Profile.Name = 'System Administrator' LIMIT 1];
+        System.runAs(user){
+            Task task = [SELECT Id FROM Task WHERE WhatId = :acc.Id LIMIT 1];
+            task.Status = 'Completed';
+            task.OwnerId = user.Id;
+            task.Description = 'This is a test comment.';
+            update task;
+        }
+   
+        
+        Account activatedAccount = [SELECT Active__c,Description FROM Account WHERE Id = :acc.Id AND AccountNumber = '003'LIMIT 1];
+        System.assertEquals(false, activatedAccount.Active__c);      
+    }
+    
     
 }

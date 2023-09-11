@@ -4,9 +4,7 @@ public class TaskTriggerHandler {
         List<Task> tasksToInsertList = new List<Task>();
         Set<Id> setOfCompletedTaskId = new Set<Id>();
         Id userId = UserInfo.getUserId();
-        system.debug('hello');
         if(checkPermissionSet(userId)){
-             system.debug('hello');
             for(Task taskRecord : newTaskList){
                 if(oldTaskMap!=NULL && oldTaskMap.get(taskRecord.Id).Status!=taskRecord.Status && taskRecord.Status == 'Completed' ){
                     setOfCompletedTaskId.add(taskRecord.Id);
@@ -15,7 +13,6 @@ public class TaskTriggerHandler {
         }
                 
         if(!setOfCompletedTaskId.isEmpty()){
-            system.debug('helloq');
             List<Account> accountToUpdateList = new List<Account>();
             for (Task taskRecord : [Select Id,Status,Description,WhatId FROM Task WHERE ID IN: setOfCompletedTaskId]) {
                 Account acc = [SELECT Id 
